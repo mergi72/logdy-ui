@@ -249,6 +249,9 @@ onMounted(() => {
     watch(() => settings.value.paintCorrelationIdCell, () => {
         settingsChanged.value = true
     })
+    watch(() => settings.value.paintCorrelationIdRow, () => {
+        settingsChanged.value = true
+    })
     watch(() => settings.value.correlationIdField, () => {
         settingsChanged.value = true
     })
@@ -486,6 +489,13 @@ const addMiddleware = () => {
                             @click="settings.paintCorrelationIdCell = true">Enabled</button>
                         <button class="btn-sm" :disabled="!settings.paintCorrelationIdCell"
                             @click="settings.paintCorrelationIdCell = false">Disabled</button>
+                </div>
+                <div class="block">
+                    Paint the same "correlation id" rows
+                    <button class="btn-sm" :disabled="settings.paintCorrelationIdRow"
+                        @click="settings.paintCorrelationIdRow = true">Enabled</button>
+                    <button class="btn-sm" :disabled="!settings.paintCorrelationIdRow"
+                        @click="settings.paintCorrelationIdRow = false">Disabled</button>
                 </div>
                 <div class="block">
                     <div>Maximum number of log messages stored in the browser</div>

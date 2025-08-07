@@ -524,6 +524,33 @@ watch(() => store.initSettings?.received, (newVal?: boolean) => {
   }
 })
 
+const getRowStyle = (row: Row): StyleValue => {
+  const style: any = { ...(row.msg.style || {}) };
+  if (store.layout.settings.paintCorrelationIdRow && store.layout.settings.correlationIdField) {
+    const correlationIdColumnName = store.layout.settings.correlationIdField;
+
+    // Check visible columns first
+    let colIndex = columns.value.findIndex(c => c.name === correlationIdColumnName);
+    if (colIndex > -1) {
+      const cell = row.cells[colIndex];
+      if (cell && cell.text) {
+        (style as any).backgroundColor = hashStringToRgb(cell.text, 40);
+      }
+    } else {
+      // Check hidden columns if not found in visible
+      const hiddenCols = store.layout.columns.filter(c => c.hidden);
+      colIndex = hiddenCols.findIndex(c => c.name === correlationIdColumnName);
+      if (colIndex > -1) {
+        const cell = row.fields[colIndex];
+        if (cell && cell.text) {
+          (style as any).backgroundColor = hashStringToRgb(cell.text, 40);
+        }
+      }
+    }
+  }
+  return style;
+}
+
 const hideColumn = (col: Column) => {
   useMainStore().confirm("Are you sure you want to hide the column? You can always restore it in the settings", () => {
     col.hidden = true
@@ -739,14 +766,14 @@ const updateSampleLine = () => {
               </th>
             </tr>
             <tr class="row" :class="{ opened: row.opened, open: row.open }" v-for="row in store.displayRows"
-              @click="store.openLogDrawer(row)" :style="(row.msg.style as StyleValue || {})">
+              @click="store.openLogDrawer(row)" :style="getRowStyle(row)">
               <td>
                 <span class="mark" :class="{ active: row.starred }" @click.stop="store.toggleRowMark(row)">
                   ⬤
                 </span>
               </td>
               <td class="cell" v-for="c, k2 in columns" :style="Object.assign(row.cells[k2].style as StyleValue || {},{
-                  backgroundColor: (store.layout.settings.paintCorrelationIdCell && store.layout.settings.correlationIdField == c.name) ? hashStringToRgb(row.cells[k2].text||'', 40): ''
+                  backgroundColor: (store.layout.settings.paintCorrelationIdCell && !store.layout.settings.paintCorrelationIdRow && store.layout.settings.correlationIdField == c.name) ? hashStringToRgb(row.cells[k2].text||'', 40): ''
                 } as StyleValue)"
                 :class="{ 'cell-error': row.cells[k2].error }">
                 <div v-if="row.cells[k2].allowHtmlInText" :style="{ width: columns[k2].width + 'px' }"

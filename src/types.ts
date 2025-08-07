@@ -9,6 +9,7 @@ export type Settings = {
     middlewares: Middleware[],
     correlationIdField?: string,
     paintCorrelationIdCell?: boolean,
+    paintCorrelationIdRow?: boolean,
 }
 
 export type Message = {
