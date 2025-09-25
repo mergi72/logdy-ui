@@ -568,7 +568,7 @@ const addMiddleware = () => {
                     <div class="row">
                         <div>Column width</div>
                         <div>
-                            <input class="input" v-model="selectedColumn.width" type="number" />
+                            <input class="input" v-model="selectedColumn.width" type="text" />
                         </div>
                     </div>
                 </div>

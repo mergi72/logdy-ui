@@ -321,6 +321,45 @@ const loadColumnsFromLayout = () => {
   columns.value = store.layout.columns.filter(col => !col.hidden)
 }
 
+const tableWidth = computed(() => {
+  if (!table.value) {
+    return 0;
+  }
+  return table.value.clientWidth - 20 // 20 for the scrollbar
+})
+
+const columnsWithWidth = computed(() => {
+  if (!table.value) {
+    return columns.value;
+  }
+  let maxWCol = columns.value.find(c => c.width === '*')
+
+  if (maxWCol) {
+    let totalWidth = 0;
+    columns.value.forEach(c => {
+      if (c.id !== maxWCol?.id) {
+        if (typeof c.width === 'string') {
+          if (c.width.endsWith('%')) {
+            totalWidth += tableWidth.value * (parseInt(c.width.slice(0, -1)) / 100)
+          } else {
+            totalWidth += parseInt(c.width)
+          }
+        } else {
+          totalWidth += c.width || 0
+        }
+      }
+    })
+    maxWCol.width = (tableWidth.value - totalWidth) + 'px'
+  }
+
+  return columns.value.map(c => {
+    if (typeof c.width === 'number') {
+      c.width = c.width + 'px'
+    }
+    return c
+  })
+})
+
 const addRawColumn = () => {
   columnEdited({
     name: "raw",
@@ -703,7 +742,7 @@ const updateSampleLine = () => {
         <div class="mid-col" :class="{ freeze: leftColHidden }" @mousedown="startDragging"></div>
       </div>
       <div class="right-col" ref="table">
-        <div v-if="columns.length === 0" style="text-align: center; padding-top:100px; font-size: 20px;">
+        <div v-if="columnsWithWidth.length === 0" style="text-align: center; padding-top:100px; font-size: 20px;">
 
           <div v-if="useMainStore().status == 'not connected'" style="margin: 10px; padding: 5px;">Status: <strong>Not
               connected</strong></div>
@@ -723,7 +762,7 @@ const updateSampleLine = () => {
           <table class="table" cellspacing="0" cellpadding="0">
             <tr>
               <th></th>
-              <th v-for="col in columns" :style="{ width: col.width + 'px', cursor: 'auto' }" class="column-name"
+              <th v-for="col in columnsWithWidth" :style="{ width: col.width, cursor: 'auto' }" class="column-name"
                 @contextmenu.prevent="useContextMenuStore().show($event, { type: 'column_header', name: col.name })">
                 <span style="cursor: auto;">{{ col.name }}</span>
                 <FilterIcon v-if="col.faceted" :style="{ opacity: store.isFacetActive(col.name) ? 1 : 0.2 }" />
@@ -745,15 +784,15 @@ const updateSampleLine = () => {
                   ⬤
                 </span>
               </td>
-              <td class="cell" v-for="c, k2 in columns" :style="Object.assign(row.cells[k2].style as StyleValue || {},{
+              <td class="cell" v-for="c, k2 in columnsWithWidth" :style="Object.assign(row.cells[k2].style as StyleValue || {},{
                   backgroundColor: (store.layout.settings.paintCorrelationIdCell && store.layout.settings.correlationIdField == c.name) ? hashStringToRgb(row.cells[k2].text||'', 40): ''
                 } as StyleValue)"
                 :class="{ 'cell-error': row.cells[k2].error }">
-                <div v-if="row.cells[k2].allowHtmlInText" :style="{ width: columns[k2].width + 'px' }"
+                <div v-if="row.cells[k2].allowHtmlInText" :style="{ width: columnsWithWidth[k2].width }"
                   v-html="row.cells[k2].text !== undefined ? row.cells[k2].text : row.cells[k2].error || '&nbsp;'"
                   @contextmenu.prevent="useContextMenuStore().show($event, { type: 'cell', value: row.cells[k2].text, columnId: c.id, error: row.cells[k2].error })">
                 </div>
-                <div v-else :style="{ width: columns[k2].width + 'px' }"
+                <div v-else :style="{ width: columnsWithWidth[k2].width }"
                   @contextmenu.prevent="useContextMenuStore().show($event, { type: 'cell', value: row.cells[k2].text, columnId: c.id, error: row.cells[k2].error })">
                   {{ row.cells[k2].text !== undefined ? row.cells[k2].text : row.cells[k2].error || "&nbsp;" }}
                 </div>

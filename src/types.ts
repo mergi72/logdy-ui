@@ -179,7 +179,7 @@ export type Column = {
     id: string
     name: string,
     idx?: number,
-    width?: number
+    width?: number | string
     hidden?: boolean
     handler?: CellHandlerFn,
     handlerTsCode?: string,
