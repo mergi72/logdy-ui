@@ -2,6 +2,10 @@
 
 This repository is a modified fork of `logdyhq/logdy-ui`.
 
+## 0.18.3 (2026-08-19)
+
+- Restore visible Next and Prev buttons in the log detail drawer while retaining keyboard navigation.
+
 ## 0.18.2 (2026-08-19)
 
 - Reload authenticated status after login so protected backend configuration is available only to an authenticated session.

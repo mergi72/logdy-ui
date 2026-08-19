@@ -2,8 +2,6 @@
 import { Row } from '../types';
 import { Layout } from "../config"
 import { ref } from 'vue';
-import ArrowUp from './icon/ArrowUp.vue'
-import ArrowDown from './icon/ArrowDown.vue'
 import Clipboard from './icon/Clipboard.vue'
 import { startDraggingDrawer } from '../dragging';
 import { useMainStore } from '../store';
@@ -35,11 +33,8 @@ const copyToClipboard = (value: string | undefined) => {
         <div class="resize-handle" @mousedown="startDraggingDrawer"></div>
         <div class="inner-drawer">
             <div class="header">
-                <div style="margin-right: 10px;">
-                    <ArrowUp /> Next /
-                    <ArrowDown /> Prev
-                </div>
-
+                <button @click="useMainStore().openLogDrawer(row, 1)">Next <kbd>↓</kbd></button>
+                <button @click="useMainStore().openLogDrawer(row, -1)">Prev <kbd>↑</kbd></button>
                 <button @click="$emit('close')">Close <kbd>Esc</kbd></button>
             </div>
             <div>
@@ -182,6 +177,7 @@ const copyToClipboard = (value: string | undefined) => {
         .header {
             display: flex;
             align-items: center;
+            gap: 6px;
             float: right;
         }
     }
