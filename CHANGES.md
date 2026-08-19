@@ -2,6 +2,10 @@
 
 This repository is a modified fork of `logdyhq/logdy-ui`.
 
+## 0.18.2 (2026-08-19)
+
+- Reload authenticated status after login so protected backend configuration is available only to an authenticated session.
+
 ## 0.18.1 (2026-08-19)
 
 - Added Apache-2.0 modification notices and documented fork provenance.

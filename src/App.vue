@@ -554,7 +554,11 @@ onMounted(async () => {
   })
 })
 
-const postAuth = () => {
+const postAuth = async () => {
+  const init = await client.sendGet<InitSettings>("status")
+  if (init.json) {
+    store.initSettings = init.json
+  }
   store.modalShow = ""
   connectToWs()
   if (store.initSettings?.analyticsEnabled) {
