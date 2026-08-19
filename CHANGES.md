@@ -2,6 +2,10 @@
 
 This repository is a modified fork of `logdyhq/logdy-ui`.
 
+## 0.18.5 (2026-08-19)
+
+- Expand hovered filter and facet sections to show approximately five additional rows.
+
 ## 0.18.4 (2026-08-19)
 
 - Show compact Origins labels ending with the parent directory and log filename while retaining the complete path as a tooltip.
