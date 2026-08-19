@@ -7,20 +7,31 @@ export class Layout {
     columns: Column[] = [];
 
     settings: Settings;
+	private trustedSource: boolean = false;
 
-    constructor(name: string, settings: Settings) {
-        this.name = name
-        this.settings = settings;
+	constructor(name: string, settings: Settings, trustedSource: boolean = false) {
+		this.name = name
+		this.settings = settings;
+		this.trustedSource = trustedSource
     }
 
-    loadFromObj(obj: any) {
-        this.name = obj.name
-        this.settings = obj.settings
-        this.columns = obj.columns.map((c: Column) => {
-            return this.prepareColumn(c)
-        })
-        this.processMiddlewareHandlers()
-    }
+	loadFromObj(obj: any, trustedSource: boolean = false) {
+		this.trustedSource = trustedSource
+		this.name = obj.name
+		this.settings = obj.settings
+		this.columns = obj.columns.map((c: Column) => {
+			return this.trustedSource ? this.prepareColumn(c) : this.prepareUntrustedColumn(c)
+		})
+		if (this.trustedSource) {
+			this.processMiddlewareHandlers()
+		} else {
+			this.settings.middlewares = []
+		}
+	}
+
+	isTrusted(): boolean {
+		return this.trustedSource
+	}
 
     toObj(): object {
         return {
@@ -32,7 +43,7 @@ export class Layout {
         this.columns.splice(this.columns.findIndex(c => c.id === id), 1)
     }
 
-    private prepareColumn(col: Column): Column {
+	private prepareColumn(col: Column): Column {
         let transpiled = ts.transpile(`` + col.handlerTsCode)
 
         let code = `
@@ -53,6 +64,13 @@ export class Layout {
 
         return col
     }
+
+	private prepareUntrustedColumn(col: Column): Column {
+		return {
+			...col,
+			handler: (line) => ({ text: line.content || "-" })
+		}
+	}
 
     processMiddlewareHandlers() {
         this.settings.middlewares = this.settings.middlewares.map(m => {
@@ -86,19 +104,21 @@ export class Layout {
         this.swapElement(idx, idx2)
     }
 
-    add(col: Column) {
+	add(col: Column) {
         col.idx = this.columns.length === 0 ? 0 : this.columns.length
         col.id = Math.random().toString().substring(2, 8)
         col.width = col.width || 150
 
-        if (col.handlerTsCode) {
-            col = this.prepareColumn(col)
-        }
+		if (col.handlerTsCode && this.trustedSource) {
+			col = this.prepareColumn(col)
+		} else {
+			col = this.prepareUntrustedColumn(col)
+		}
         this.columns.push(col)
     }
 
-    update(col: Column) {
-        col = this.prepareColumn(col)
+	update(col: Column) {
+		col = this.trustedSource ? this.prepareColumn(col) : this.prepareUntrustedColumn(col)
         let idx = this.columns.findIndex(c => c.id === col.id)
         this.columns[idx] = col
     }

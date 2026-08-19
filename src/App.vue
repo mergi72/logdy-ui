@@ -305,7 +305,7 @@ const loadConfig = (load?: Layout) => {
   }
 
   if (layouts[0]) {
-    store.layout.loadFromObj(layouts[0])
+		store.layout.loadFromObj(layouts[0], !!store.initSettings?.configStr)
   } else {
     store.layout.add({
       id: "",
@@ -373,7 +373,7 @@ const connectToWs = () => {
   let wsProto = window.location.protocol === 'https:' ? 'wss' : 'ws'
   const endpoint = wsProto + '://' + window.location.host + window.location.pathname + 'ws'
   console.log("Connecting to WS", endpoint)
-  const socket = new WebSocket(endpoint + '?password=' + store.getPassword());
+	const socket = new WebSocket(endpoint);
   store.status = 'not connected'
   var wasOpened = false
 
@@ -571,7 +571,7 @@ const initWs = async (): Promise<boolean> => {
     useNotificationBarStore().processNotification(init.json?.updateVersion)
   }
 
-  let passValid = await client.sendGet("check-pass?password=" + store.getPassword())
+	let passValid = await client.sendGet("check-pass")
   if (store.initSettings.authRequired && passValid.status !== 200) {
     store.modalShow = "auth"
   } else {
@@ -749,7 +749,7 @@ const updateSampleLine = () => {
                   backgroundColor: (store.layout.settings.paintCorrelationIdCell && store.layout.settings.correlationIdField == c.name) ? hashStringToRgb(row.cells[k2].text||'', 40): ''
                 } as StyleValue)"
                 :class="{ 'cell-error': row.cells[k2].error }">
-                <div v-if="row.cells[k2].allowHtmlInText" :style="{ width: columns[k2].width + 'px' }"
+				<div v-if="store.layout.isTrusted() && row.cells[k2].allowHtmlInText" :style="{ width: columns[k2].width + 'px' }"
                   v-html="row.cells[k2].text !== undefined ? row.cells[k2].text : row.cells[k2].error || '&nbsp;'"
                   @contextmenu.prevent="useContextMenuStore().show($event, { type: 'cell', value: row.cells[k2].text, columnId: c.id, error: row.cells[k2].error })">
                 </div>

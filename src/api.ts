@@ -29,7 +29,8 @@ class httpClient {
         }
 
         let res = await fetch(window.location.pathname + "api/" + path, {
-            method: "GET",
+			method: "GET",
+			credentials: "same-origin",
             headers: {
                 // "Content-Type": "application/json",
                 ...this.headers,
@@ -58,8 +59,9 @@ class httpClient {
             headers = this.onRequestStart() || {}
         }
 
-        let res = await fetch("api/" + path, {
-            method: "POST",
+		let res = await fetch(window.location.pathname + "api/" + path, {
+			method: "POST",
+			credentials: "same-origin",
             body: data ? JSON.stringify(data) : null,
             headers: {
                 "Content-Type": "application/json",

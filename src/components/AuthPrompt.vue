@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { onMounted, ref } from 'vue';
-import { useMainStore } from '../store';
 import { client } from "../api"
 
 const pass = ref<string>("")
@@ -20,11 +19,11 @@ onMounted(() => {
 const submit = async () => {
     msg.value = ""
     loading.value = true
-    let res = await client.sendGet("check-pass?password=" + pass.value)
+	let res = await client.sendPost("check-pass", { password: pass.value, remember: remember.value })
 
     loading.value = false
     if (res.status == 200) {
-        useMainStore().setPassword(pass.value.toString(), remember.value)
+		pass.value = ""
         emit('success')
         return
     }
@@ -43,7 +42,7 @@ const submit = async () => {
     </div>
     <div v-if="loading">loading...</div>
     <div style="margin-top: 10px">
-        <input type="checkbox" v-model="remember" id="ch" /> <label for="ch">Remember password</label>
+		<input type="checkbox" v-model="remember" id="ch" /> <label for="ch">Remember session</label>
     </div>
     <div class="err" v-if="msg">
         {{ msg }}

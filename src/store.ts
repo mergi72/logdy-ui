@@ -1,6 +1,6 @@
 import { defineStore } from "pinia";
 import { computed, ref, watch } from "vue";
-import { storageApp, storageLogs } from "./storage";
+import { storageLogs } from "./storage";
 import { FacetValues, Message, Row, TraceRow } from "./types";
 import { Layout } from "./config";
 import { useFilterStore } from "./stores/filter";
@@ -68,7 +68,6 @@ export const useMainStore = defineStore("main", () => {
     const receiveCounters = ref<ReceiveCounters>({ LastDeliveredIdx: 0, MessageCount: 0, MessagesToTail: 0 })
     const anotherTab = ref<boolean>(false)
     const modalShow = ref<"" | "auth" | "import" | "export-logs" | "load-logs" | "feedback">("")
-    const password = ref<string>("")
     const stickedToBottom = ref<boolean>(false)
     const rows = ref<Row[]>([])
     const rowsIds = ref<Record<string, boolean>>({})
@@ -89,20 +88,6 @@ export const useMainStore = defineStore("main", () => {
     const layout = ref<Layout>(new Layout('main', { leftColWidth: 300, drawerColWidth: 900, maxMessages: 1000, middlewares: [], entriesOrder: 'desc' }))
 
     let confirmFn: (() => void) | null = null;
-
-    const setPassword = (pass: string, store: boolean = true) => {
-        password.value = pass
-        if (store) {
-            storageApp.add({ password: pass }, "main")
-        }
-    }
-
-    const getPassword = (): string => {
-        if (!password.value) {
-            password.value = storageApp.getOne("main")?.password || ""
-        }
-        return password.value
-    }
 
     const confirm = (msg: string, fn: () => void) => {
         confirmMsg.value = msg
@@ -506,9 +491,6 @@ export const useMainStore = defineStore("main", () => {
         initSettings,
         anotherTab,
         modalShow,
-
-        setPassword,
-        getPassword,
 
         stickedToBottom,
 

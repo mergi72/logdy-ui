@@ -50,7 +50,7 @@ export function getLayout(json: boolean = true): Layout {
         })
     }
 
-    let l = new Layout("demo", {
+	let l = new Layout("demo", {
         maxMessages: 1000,
         leftColWidth: 300,
         drawerColWidth: 900,
@@ -58,7 +58,7 @@ export function getLayout(json: boolean = true): Layout {
         entriesOrder: "desc",
         correlationIdField: "requestId",
         paintCorrelationIdCell: true
-    })
+	}, true)
 
     if (!json) {
         l.add({
