@@ -1,3 +1,4 @@
+// Modified by VFS Platform contributors, 2026.
 import { Column, Settings } from "./types"
 import ts from "typescript"
 

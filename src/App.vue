@@ -1,3 +1,4 @@
+<!-- Modified by VFS Platform contributors, 2026. -->
 <script setup lang="ts">
 import { StyleValue, computed, onMounted, ref, watch } from 'vue';
 import { Row, Facet, Message, CellHandler, Column, Settings, Middleware, StoredMessage } from "./types"

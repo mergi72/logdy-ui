@@ -1,3 +1,4 @@
+// Modified by VFS Platform contributors, 2026.
 import { defineStore } from "pinia";
 import { computed, ref, watch } from "vue";
 import { storageLogs } from "./storage";

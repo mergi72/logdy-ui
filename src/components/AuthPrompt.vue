@@ -1,3 +1,4 @@
+<!-- Modified by VFS Platform contributors, 2026. -->
 <script setup lang="ts">
 import { onMounted, ref } from 'vue';
 import { client } from "../api"

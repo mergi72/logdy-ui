@@ -1,5 +1,7 @@
 ## Logdy UI repository
 
+This is a modified VFS Platform fork. See [NOTICE](NOTICE) and [CHANGES.md](CHANGES.md) for provenance and modification details.
+
 This repository contains code of a Vue.js application that is a Web UI of [logdy.dev](https://logdy.dev).
 
 **Navigate to [logdy-core](https://github.com/logdyhq/logdy-core) repository for the Logdy source-code, full documentation and use cases.**

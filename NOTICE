@@ -1,0 +1,10 @@
+Logdy UI - VFS Platform fork
+
+This product is based on Logdy UI: https://github.com/logdyhq/logdy-ui
+The upstream work is licensed under the Apache License, Version 2.0, and the
+original LICENSE file is retained in this distribution.
+
+Modified by VFS Platform contributors, 2026. Modifications include session
+authentication, removal of credentials from URLs and browser storage, safe
+handling of untrusted layouts, prefix-safe resource paths, and CI validation.
+See CHANGES.md for details.

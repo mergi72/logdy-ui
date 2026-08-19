@@ -1,4 +1,4 @@
-
+// Modified by VFS Platform contributors, 2026.
 
 export const BreserInit = async () => {
     //@ts-expect-error
