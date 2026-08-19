@@ -2,6 +2,10 @@
 
 This repository is a modified fork of `logdyhq/logdy-ui`.
 
+## 0.18.4 (2026-08-19)
+
+- Show compact Origins labels ending with the parent directory and log filename while retaining the complete path as a tooltip.
+
 ## 0.18.3 (2026-08-19)
 
 - Restore visible Next and Prev buttons in the log detail drawer while retaining keyboard navigation.

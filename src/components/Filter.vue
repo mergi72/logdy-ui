@@ -26,6 +26,16 @@ const formatOriginLabel = (l: string) => {
     return l
 }
 
+const compactOriginLabel = (label: string) => {
+    const formatted = formatOriginLabel(label)
+    if (!formatted.startsWith('File: ')) {
+        return formatted
+    }
+
+    const parts = formatted.slice(6).replace(/\\/g, '/').split('/').filter(Boolean)
+    return parts.length > 2 ? `File: …/${parts.slice(-2).join('/')}` : formatted
+}
+
 </script>
 <template>
     <div class="facet">
@@ -57,7 +67,7 @@ const formatOriginLabel = (l: string) => {
             </div>
             <div class="facet-item" :class="{ 'facet-selected': store.filterToggle[label] }"
                 @click="store.toggleFilter(label)" v-for="[label, k]  in origins">
-                <div class="facet-label" :title="formatOriginLabel(label)">{{ formatOriginLabel(label) }}</div>
+                <div class="facet-label" :title="formatOriginLabel(label)">{{ compactOriginLabel(label) }}</div>
                 <div class="facet-val">{{ k }}</div>
             </div>
         </div>
